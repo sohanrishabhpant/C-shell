@@ -1,6 +1,6 @@
 #include"prompt.h"
 
-void give_data_process(char**command,int count,int process_id){
+void give_data_process(char**command,int count,int process_id,char *home){
  char proc_path[100];
     snprintf(proc_path, sizeof(proc_path), "/proc/%d/stat", process_id);
 
@@ -51,6 +51,20 @@ void give_data_process(char**command,int count,int process_id){
     snprintf(proc_path, sizeof(proc_path), "/proc/%d/exe", process_id);
 
     ssize_t len = readlink(proc_path, exe_path, sizeof(exe_path) - 1);
+    if (strncmp(exe_path,home,strlen(home))==0){
+        printf("pid : %d\n", process_id);
+    printf("process status : %s\n", status_str);
+    printf("Process Group : %d\n", pgrp);
+    printf("Virtual memory : %lu\n", vsize);
+    printf("Executable path:.");
+            int j=strlen(home);
+            while(exe_path[j]){
+                printf("%c",exe_path[j]);
+                j++;
+            }
+            printf("\n");
+    }
+    else{
     if (len != -1) {
         exe_path[len] = '\0';
     } else {
@@ -62,24 +76,4 @@ void give_data_process(char**command,int count,int process_id){
     printf("Process Group : %d\n", pgrp);
     printf("Virtual memory : %lu\n", vsize);
     printf("executable path : %s\n", exe_path);
-}
-void list_running_processes() {
-    DIR *dir;
-    struct dirent *ent;
-
-    dir = opendir("/proc");
-    if (dir == NULL) {
-        perror("Unable to open /proc directory");
-        return;
-    }
-
-    printf("Running processes:\n");
-
-    while ((ent = readdir(dir)) != NULL) {
-        if (isdigit(*ent->d_name)) {
-            printf("%s\n", ent->d_name);
-        }
-    }
-
-    closedir(dir);
-}
+}}

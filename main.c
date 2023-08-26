@@ -24,14 +24,12 @@ int main()
     // Keep accepting commands
     char *dir = malloc(sizeof(char) * 1000);
     getcwd(dir, 1000);
-    char *dir1 = malloc(sizeof(char) * 1000);
-    getcwd(dir1, 1000);
+    char *dir1 = NULL;
     char *path = malloc(sizeof(char) * 1000);
     getcwd(path, 1000);
     // printf("%s",dir);
     int count1 = 0;
     int process_id = getpid();
-    retrive_file(history, &it);
     temp1 = 0;
     prompt();
     printf("\n");
@@ -43,8 +41,10 @@ int main()
         // printf("%s\n",dir);
         if (temp1 == 0)
         {
+            // printf("erri:%s\n",dir1);
             prompt1(prompt_array, dir1, count1, path);
         }
+        retrive_file(history,&it,file);
         char input[4096];
         if (fgets(input, 4096, stdin) == NULL)
         {
@@ -66,7 +66,6 @@ int main()
         }
         else if (strcmp(input, "pastevents") == 0)
         {
-            printf("ite:%d\n", it);
             for (int i = 0; i <= it - 1; i++)
             {
                 printf("%s", history[i]);
@@ -87,6 +86,7 @@ int main()
                 char *token = strtok_r(temp, ";", &temp);
                 while (token != NULL)
                 {
+                    
                     char *argv[SIZE_OF_COMMAND];
                     int count = 0;
                     char *ms = strtok_r(temp, ";", &temp);
@@ -114,27 +114,28 @@ int main()
                         if (strcmp(argv[0], "warp") == 0)
                         {
                             dir1 = change_directory(argv, count, prompt_array, count1, &dir, path);
+                            //  printf("dir:%s\n",dir);
                             flag = 2;
                         }
                         if (strcmp(argv[0], "peek") == 0)
                         {
-                            file_list(argv, count, prompt_array, count1, &dir, path); // printf("count:%d\n",count);
+                            file_list(argv, count, prompt_array, count1, &dir, path);
+                            // printf("count:%d\n",count);
                             flag = 2;
                         }
                         if (strncmp(argv[0], "pastevents", 11) == 0)
                         {
                             int var = atoi(argv[2]);
-                            execute_past_command(history, var);
+                            execute_past_command(history,&it,var);
                             flag = 2;
                         }
                         if (strcmp(argv[0], "proclore") == 0)
                         {
-                            give_data_process(argv, count, process_id);
-                            dir1 = path;
+                            give_data_process(argv, count, process_id,path);
+                             dir1 = path;
                         }
-                        if (strcmp(argv[0], "seek") == 0)
-                        {
-                            list_all_paths(argv, count, path);
+                        if (strcmp(argv[0],"seek")==0){
+                            seek(argv,count,path);
                         }
                         // if (flag!=2){
                         //     execute(argv,flag);
@@ -142,18 +143,20 @@ int main()
                         // if (strncmp(input,"pastevents",10)!=0){
                         // printf("iterator:%d\n",it);
                         // }
-                    }
                     if (flag != 2)
                     {
                         run_command(argv, flag, count, prompt_array, &temp1);
                     }
-                    retrive_file(history, &it);
+                    
                     token = ms;
+                    count1++;
                 }
-                count1++;
+                }
+                
+                
             }
             else
-            {
+            {   
                 char *temp = input;
                 char *token = strtok_r(temp, ";", &temp);
                 
@@ -183,11 +186,14 @@ int main()
                      if (strncmp(argv[0], "pastevents", 11) == 0)
                         {
                             int var = atoi(argv[2]);
-                            execute_past_command(history, var);
+                            execute_past_command(history,&it,var);
                             flag = 2;
                         }
                 }
             }
+        
+         
         }
+       
     }
 }

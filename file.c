@@ -90,7 +90,7 @@ void file_list(char **argv, int size,char *prompt_array,int ris,char**previous_a
     int hidden_files = 0;
     char *path=malloc(sizeof(char)*10000);
     if (size==1){
-        path=change_directory(argv,size,prompt_array,ris,previous_array,home_dir);
+        path=home_dir;
         hidden_files=0;
     }
     if (size > 1) {
@@ -119,6 +119,13 @@ void file_list(char **argv, int size,char *prompt_array,int ris,char**previous_a
         display_extra_info(temp[i],full_path,extra_info,hidden_files);
     }}
     if (hidden_files&&!extra_info){
+        for (int i=0;i<k;i++){
+            // display_info(temp[i]);
+             snprintf(full_path,2500,"%s/%s",path,temp[i]);
+            display_extra_info(temp[i],full_path,extra_info,hidden_files);
+        }
+    }
+    if (!hidden_files&&!extra_info){
         for (int i=0;i<k;i++){
             // display_info(temp[i]);
              snprintf(full_path,2500,"%s/%s",path,temp[i]);

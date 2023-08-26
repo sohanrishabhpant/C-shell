@@ -17,7 +17,7 @@ void save_to_file(char **history, int *it) {
             perror("Error opening file");
             return;
         }
-        printf("the iterator is *it:%d\n",*it);
+        // printf("the iterator is *it:%d\n",*it);
         fprintf(fp, "%s\n", history[*it - 1]);
         fclose(fp);
     } else {
@@ -47,7 +47,7 @@ void add_to_file(char **history, int *it, int max_count, char *command) {
         if (*it == 0 || ((*it > 0) && strcmp(history[*it - 1], command) != 0 && (*it < 15)) || strncmp(command, "pastevents", 10) != 0) {
             copy(history[*it], command);
             *it=*it+1;
-            printf("after:it%d",*it);
+            // printf("after:it%d",*it);
             save_to_file(history, it);
         }
     }
@@ -62,19 +62,27 @@ void add_to_file1(char **history,int *it,int max_count,char **path){
   }
   add_to_file(history,it,max_count,str);
 }
-void retrive_file(char **history, int *it) {
-    FILE *fp = fopen("history.txt", "r");
-    char *str = malloc(sizeof(char) * 1000);
+void retrive_file(char **history, int *it,char *dir) {
+    FILE *fp = fopen(dir, "r");
+    if (fp == NULL) {
+        perror("Error opening file");
+        exit(1);
+    }
+
+    char str[1002];
     int line_count = 0;
-    while (fgets(str, 1000, fp) != NULL && line_count < 15) {
-        copy(history[line_count], str);
+
+    while (fgets(str, sizeof(str), fp) != NULL && line_count < 15) {
+        // Allocate memory for each line and copy the content
+        history[line_count] = strdup(str);
         line_count++;
     }
+
     *it = line_count;
+
     fclose(fp);
 }
-
-void execute_past_command(char **history, int position) {
+void execute_past_command(char **history,int *it,int position) {
     printf("position: %d\n", position);
     
     // Create a child process using fork
@@ -86,12 +94,14 @@ void execute_past_command(char **history, int position) {
     } else if (child_pid == 0) {
         // Child process
         char *command = history[position - 1];
-        
-        // Remove the newline character if present
         size_t len = strlen(command);
         if (len > 0 && command[len - 1] == '\n') {
             command[len - 1] = '\0';
         }
+        add_to_file(history,it,15,command);
+        
+        // Remove the newline character if present
+        
 
         if (strcmp(command, "pastevents execute") == 0 && position == 100) {
             printf("Cannot execute most recent command.\n");

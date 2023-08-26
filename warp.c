@@ -1,8 +1,8 @@
 #include "headers.h"
 
 char* change_directory(char **command, int size, char *prompt_array, int ris, char **prev_dir,char *home_dir) {
-    char *dir = malloc(sizeof(char) * 256);
-    getcwd(dir, 256);
+    char *dir = malloc(sizeof(char) * 1000);
+    getcwd(dir, 1000);
 
     // for (int i=0;i<size;i++){
     //     for (int j=0;command[i][j];j++){
@@ -40,7 +40,7 @@ char* change_directory(char **command, int size, char *prompt_array, int ris, ch
                 j++;
                 k++;
             }arr[k-2]='\0';
-            printf("nee:%s\n",arr);
+            // printf("nee:%s\n",arr);
             chdir(arr);
             j++;
             k=2;
@@ -72,6 +72,8 @@ char* change_directory(char **command, int size, char *prompt_array, int ris, ch
     getcwd(dir, 256);
     
     // printf("prev: %s\n", *prev_dir);
-    printf("%s\n", dir);}}
+    }
+    printf("%s\n", dir);
+    }
     return dir;
 }

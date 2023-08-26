@@ -13,7 +13,12 @@
 #include <ctype.h>
 #include<time.h>
 #include<sys/time.h>
-#include <stdlib.h>
+#include<string.h>
+#include <errno.h>
+#include <getopt.h>
+#include <grp.h>
+#include<stdbool.h>
+
 
 
 

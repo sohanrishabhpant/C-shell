@@ -1,9 +1,16 @@
-echo 4 
-echo 4 ; echo 3
-echo 4
-echo 4 
-echo 4 
-echo 6 
-echo 5 
-proclore
-proclore 86589
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+seek history1.txt
