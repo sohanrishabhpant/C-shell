@@ -13,4 +13,4 @@
 
 
 
-seek history1.txt
+warp snap

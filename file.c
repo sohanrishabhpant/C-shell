@@ -90,7 +90,7 @@ void file_list(char **argv, int size,char *prompt_array,int ris,char**previous_a
     int hidden_files = 0;
     char *path=malloc(sizeof(char)*10000);
     if (size==1){
-        path=home_dir;
+        getcwd(path,10000);
         hidden_files=0;
     }
     if (size > 1) {
